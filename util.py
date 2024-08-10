@@ -1,6 +1,5 @@
 import os
 import pickle
-
 import tkinter as tk
 from tkinter import messagebox
 import face_recognition
