@@ -31,6 +31,12 @@ class APP:
         # Add the webcam feed to the label
         self.add_webcam(self.webcam_label)
 
+        # Define a Directory for the Database
+        self.db_dir = './db'
+        if not os.path.exists(self.db_dir):
+            os.mkdir(self.db_dir)
+
+
     def add_webcam(self, label):
         # Initialize webcam capture if not already done
         if 'cap' not in self.__dict__:
@@ -103,9 +109,13 @@ class APP:
         self.main_window.mainloop()
 
 
-
     def accept_register_new_user(self):
-        pass
+        name = self.entry_text_register_new_user.get(1.0, "end-1c")  # Get username input
+        cv2.imwrite(os.path.join(self.db_dir, '{}.jpg'.format(name)), self.register_new_user_capture)
+
+        util.msg_box('Success!', "User Was Registered Successfully !")
+
+        self.register_new_user_window.destroy()
 
 
 # Entry point of the program
