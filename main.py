@@ -1,6 +1,7 @@
 import os.path
 import datetime
 import pickle
+import subprocess
 
 import tkinter as tk  # Import Tkinter for creating the graphical user interface
 import cv2  # Import OpenCV for webcam access and image processing
@@ -36,6 +37,10 @@ class APP:
         if not os.path.exists(self.db_dir):
             os.mkdir(self.db_dir)
 
+        # Attendance
+        self.log_path = './log.txt'
+
+
 
     def add_webcam(self, label):
         # Initialize webcam capture if not already done
@@ -65,10 +70,25 @@ class APP:
         # Schedule the function to be called again after 20 milliseconds to refresh the frame
         self._label.after(20, self.process_webcam)
 
-
-
     def login(self):
-        pass
+        unknown_img_path = './.tmp.jpg'
+
+        cv2.imwrite(unknown_img_path, self.most_recent_capture_arr)
+
+        output = subprocess.check_output(['face_recognition', self.db_dir, unknown_img_path])
+        name = output.decode('utf-8').split(',')[1][:-1]
+        print(name)
+
+        if name in ['unknown_person', 'no_persons_found']:
+            util.msg_box('Unknown person found', "Unknown User, Please register new user or try again. ")
+        else:
+            util.msg_box('Welcome Back !', f"Welcome Back {name} !")
+            with open(self.log_path, 'a') as f:
+                f.write('{},{}\n'.format(name, datetime.datetime.now()))
+                f.close()
+
+
+        os.remove(unknown_img_path)
 
     def register_new_user(self):
         self.register_new_user_window = tk.Toplevel(self.main_window)
@@ -103,11 +123,9 @@ class APP:
 
         self.register_new_user_capture = self.most_recent_capture_arr.copy()
 
-
     def start(self):
         # Start the main event loop of the application, keeping the window open and interactive
         self.main_window.mainloop()
-
 
     def accept_register_new_user(self):
         name = self.entry_text_register_new_user.get(1.0, "end-1c")  # Get username input
@@ -116,7 +134,6 @@ class APP:
         util.msg_box('Success!', "User Was Registered Successfully !")
 
         self.register_new_user_window.destroy()
-
 
 # Entry point of the program
 if __name__ == '__main__':
