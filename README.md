@@ -1,4 +1,4 @@
-# FaceRecognitionAPP
+# FacialRecognitionApp
 
 ## Overview
 
