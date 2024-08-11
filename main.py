@@ -16,7 +16,7 @@ class APP:
         self.main_window.geometry('1200x520+350+100')  # Set the size and position of the window
 
         # Create a "Login" button using a custom utility function
-        self.login_button_main_window = util.get_button(self.main_window, 'Login', 'green', self.login)
+        self.login_button_main_window = util.get_button(self.main_window, 'Login', 'gray', self.login, fg='black')
         self.login_button_main_window.place(x=750, y=300)  # Position the "Login" button on the window
 
         # Create a "Register New User" button using a custom utility function
@@ -65,11 +65,47 @@ class APP:
         pass
 
     def register_new_user(self):
-        pass
+        self.register_new_user_window = tk.Toplevel(self.main_window)
+        self.register_new_user_window .geometry('1200x520+370+120')
+
+        self.accept_button_register_new_user_window = util.get_button(self.register_new_user_window, 'Accept', 'gray', self.accept_register_new_user, fg='black')
+        self.accept_button_register_new_user_window.place(x=750, y=300)
+
+        self.try_again_button_register_new_user_window = util.get_button(self.register_new_user_window, 'Try Again', 'gray', self.try_again_register_new_user, fg='black',)
+        self.try_again_button_register_new_user_window.place(x=750, y=400)
+
+
+        self.capture_label = util.get_img_label(self.register_new_user_window)
+        self.capture_label.place(x=10, y=0, width=700, height=500)
+
+        self.add_img_to_label(self.capture_label)
+
+        self.entry_text_register_new_user = util.get_entry_text(self.register_new_user_window)
+        self.entry_text_register_new_user.place(x=750, y=150)
+
+        self.text_label_register_new_user = util.get_text_label(self.register_new_user_window,
+                                                                'Please, \ninput username:')
+        self.text_label_register_new_user.place(x=750, y=70)
+
+    def try_again_register_new_user(self):
+        self.register_new_user_window.destroy()
+
+    def add_img_to_label(self, label):
+        imgtk = ImageTk.PhotoImage(image=self.most_recent_capture_pil)
+        label.imgtk = imgtk
+        label.configure(image=imgtk)
+
+        self.register_new_user_capture = self.most_recent_capture_arr.copy()
+
 
     def start(self):
         # Start the main event loop of the application, keeping the window open and interactive
         self.main_window.mainloop()
+
+
+
+    def accept_register_new_user(self):
+        pass
 
 
 # Entry point of the program
